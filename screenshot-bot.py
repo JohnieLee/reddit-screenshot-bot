@@ -63,7 +63,7 @@ class SnapshotBot(object) :
         for comment in comments :
             self.logger.debug('comment: %s - %s - %s', 
                 comment.id, comment.author, comment.body[:50])
-            if (comment.author.name == '/u/snapshot_bot') :
+            if ('/u/snapshot_bot' in comment.body) :
                 self._process_comment(comment)
     
     def _process_comment(self, comment) :
