@@ -59,11 +59,11 @@ class SnapshotBot(object) :
 
     def process(self, subreddits) :
         '''Executes a full run'''
-        comments = self.praw.get_comments('test', limit = 10)
+        comments = self.praw.get_comments('test', limit = 50)
         for comment in comments :
             self.logger.debug('comment: %s - %s - %s', 
                 comment.id, comment.author, comment.body[:50])
-            if (comment.author.name == 'tazzy531') :
+            if (comment.author.name == '/u/snapshot_bot') :
                 self._process_comment(comment)
     
     def _process_comment(self, comment) :
