@@ -1,0 +1,5 @@
+ipython==1.0.0
+pyimgur==0.5.2
+readline==6.2.4.1
+requests==1.2.3
+wsgiref==0.1.2
