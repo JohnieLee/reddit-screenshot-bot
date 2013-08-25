@@ -57,13 +57,14 @@ class SnapshotBot(object) :
         db = conn[urlparse(MONGO_URL).path[1:]]
         return db
 
-    def process(self, subreddits) :
-        '''Executes a full run'''
-        comments = self.praw.get_comments('test', limit = 50)
+    def process(self, subreddit, comment_limit = 50) :
+        '''Process the latest comments for a given subreddit'''
+        self.logger.info('Processing subreddit: %s', subreddit)
+        comments = self.praw.get_comments(subreddit, limit = comment_limit)
         for comment in comments :
-            self.logger.debug('comment: %s - %s - %s', 
-                comment.id, comment.author, comment.body[:50])
             if ('/u/snapshot_bot' in comment.body) :
+                self.logger.debug('comment: %s - %s - %s', 
+                    comment.id, comment.author, comment.body[:50])
                 self._process_comment(comment)
     
     def _process_comment(self, comment) :
@@ -143,8 +144,8 @@ class SnapshotBot(object) :
 
 def main() :
     bot = SnapshotBot(SNAPITO_API_KEY, IMGUR_API_KEY, REDDIT_CREDS, MONGO_URL)
-    bot.process('test')
-    #bot.capture_url('www.cnn.com')
+    for subreddit in SUBREDDIT_LIST.split(',') :
+        bot.process(subreddit)
 
 
 if __name__ == "__main__":
