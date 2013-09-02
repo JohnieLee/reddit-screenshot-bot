@@ -131,8 +131,8 @@ class SnapshotCommand(Command):
 
     def _is_already_processed(self, comment):
         key = self._get_db_key(comment)
-        cursor = self.db.snapshot_log.find(key)
-        return (cursor.count() > 0)
+        curr = self.db.snapshot_log.find_one(key)
+        return (curr != None and curr['reply_completed'] == True)
 
     def _log_to_db(self, comment, snapshot_urls=None, imgur_album=None,
             imgur_urls=None, reply_text=None, reply_completed=None):
