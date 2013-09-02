@@ -75,11 +75,13 @@ class RedditCommentProcessor(object):
 
             self._process_comments(comments)
 
+        self.logger.info('Completed run')
+
     def _process_comments(self, comments):
         for comment, command in product(comments, self.commands):
-            #try:
+            try:
                 command.execute(comment)
-            #except Exception, err:
-            #    self.logger.exception(
-            #        'Failed processing on command [%s] with exception: %s',
-            #        command.name, repr(err))
+            except Exception, err:
+                self.logger.error(
+                    'Failed processing on command [%s] with exception: %s',
+                    command.name, repr(err), exc_info=True)
