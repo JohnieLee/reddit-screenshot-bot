@@ -70,6 +70,11 @@ class SnapshotCommand(Command):
         urls = self._extract_urls(comment.body)
         self._log_to_db(comment, urls)
 
+        if len(urls) == 0:
+            self.logger.info('No URLs to process, skipping.')
+            self._log_to_db(comment, urls, reply_completed=True)
+            return
+
         imgur_album = self._create_imgur_album(comment)
         self._log_to_db(comment, urls, imgur_album)
 
