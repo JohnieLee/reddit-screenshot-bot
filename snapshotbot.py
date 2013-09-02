@@ -97,6 +97,7 @@ class SnapshotCommand(Command):
         REPLY_ALBUM_LINK = '* [Snapshot Album]({album_link})\n\n'
         REPLY_FOOTER = ("\n\n____\n\n"
             "    To snapshot URLs, add '/u/snapshot_bot' to your comment.\n"
+            "    For more information go to r/snapshot_bot.\n"
             "    Built with love by tazzy531.")
 
         self.logger.debug("FOO: %s\n %s", urls, imgur_urls)
