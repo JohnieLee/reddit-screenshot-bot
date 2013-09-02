@@ -1,1 +1,1 @@
-screenshotbot: python screenshot-bot.py
+screenshotbot: python botservice.py
