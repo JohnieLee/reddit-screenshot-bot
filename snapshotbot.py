@@ -57,8 +57,8 @@ class SnapshotCommand(Command):
     def _process_comment(self, comment):
         '''Process a comment that contains the trigger'''
         self.logger.debug(
-            'Processing comment: %s - %s - %s',
-            comment.id, comment.author.name, comment.body[:50])
+            'Processing comment: %s - %s - %s - %s',
+            comment.link_id, comment.id, comment.author.name, comment.body[:50])
 
         if (self._is_already_processed(comment)):
             return
@@ -96,9 +96,10 @@ class SnapshotCommand(Command):
         REPLY_LINK = '* {url} - [[snapshot]({snapshot})]\n\n'
         REPLY_ALBUM_LINK = '* [Snapshot Album]({album_link})\n\n'
         REPLY_FOOTER = ("\n\n____\n\n"
-            "    To snapshot URLs, add '/u/snapshot_bot' to your comment.\n"
-            "    For more information go to r/snapshot_bot.\n"
-            "    Built with love by tazzy531.")
+            "`To snapshot URLs, add '/u/snapshot_bot' to your comment.`\n\n"
+            "`For more information go to:` [r/snapshot_bot]("
+            "http://reddit.com/r/snapshot_bot).\n\n"
+            "`Built with love by tazzy531.`")
 
         self.logger.debug("FOO: %s\n %s", urls, imgur_urls)
         links_txt =''.join([REPLY_LINK.format(url=url, snapshot=imgur_url)
