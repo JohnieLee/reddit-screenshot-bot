@@ -48,8 +48,9 @@ class SnapshotCommand(Command):
 
     def process(self, comment):
         '''Process the latest comments for a given subreddit'''
-        if (comment.author.name != u'snapshot_bot' and
-            SnapshotCommand.TRIGGER_WORD in comment.body):
+        if (comment.author != None
+            and comment.author.name != u'snapshot_bot'
+            and SnapshotCommand.TRIGGER_WORD in comment.body):
             self.logger.debug('comment: %s - %s - %s',
                 comment.id, comment.author, comment.body[:50])
             self._process_comment(comment)
