@@ -89,11 +89,11 @@ class SnapshotCommand(Command):
             self._log_to_db(comment, urls, imgur_album, imgur_urls,
                             reply_text, False)
 
-            self._send_reply(comment,reply_text)
+            self._send_reply(comment, reply_text)
             self._log_to_db(comment, urls, imgur_album, imgur_urls,
                             reply_text, True)
 
-    def _extract_urls(self, body) :
+    def _extract_urls(self, body):
         matches = re.findall(SnapshotCommand.URL_REGEX, body)
         urls = [x[0] for x in matches]
         return urls
