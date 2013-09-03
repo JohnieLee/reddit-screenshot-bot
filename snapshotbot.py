@@ -48,10 +48,11 @@ class SnapshotCommand(Command):
 
     def process(self, comment):
         '''Process the latest comments for a given subreddit'''
-        if (comment.author != None
-            and comment.author.name != u'snapshot_bot'
-            and SnapshotCommand.TRIGGER_WORD in comment.body):
-            self.logger.debug('comment: %s - %s - %s',
+        if (comment.author is not None
+                and comment.author.name != u'snapshot_bot'
+                and SnapshotCommand.TRIGGER_WORD in comment.body):
+            self.logger.debug(
+                'comment: %s - %s - %s',
                 comment.id, comment.author, comment.body[:50])
             self._process_comment(comment)
 
@@ -101,15 +102,17 @@ class SnapshotCommand(Command):
         REPLY_HEADER = 'The following URLs have been snapshotted:\n\n'
         REPLY_LINK = '* {url} - [[snapshot]({snapshot})]\n\n'
         REPLY_ALBUM_LINK = '* [Snapshot Album]({album_link})\n\n'
-        REPLY_FOOTER = ("\n\n____\n\n"
+        REPLY_FOOTER = (
+            "\n\n____\n\n"
             "`To snapshot URLs, add '/u/snapshot_bot' to your comment.`\n\n"
             "`For more information go to:` [r/snapshot_bot]("
             "http://reddit.com/r/snapshot_bot).\n\n"
             "`Built with love by tazzy531.`")
 
         self.logger.debug("FOO: %s\n %s", urls, imgur_urls)
-        links_txt =''.join([REPLY_LINK.format(url=url, snapshot=imgur_url)
-            for url, imgur_url in zip(urls, imgur_urls)])
+        links_txt = ''.join(
+            [REPLY_LINK.format(url=url, snapshot=imgur_url)
+                for url, imgur_url in zip(urls, imgur_urls)])
 
         album_txt = REPLY_ALBUM_LINK.format(album_link=album.link)
 
@@ -132,19 +135,19 @@ class SnapshotCommand(Command):
 
     def _get_db_key(self, comment):
         return {
-                    'submission_id': comment.link_id,
-                    'comment_id': comment.id
-                }
+            'submission_id': comment.link_id,
+            'comment_id': comment.id
+        }
 
     def _is_already_processed(self, comment):
         key = self._get_db_key(comment)
         curr = self.db.snapshot_log.find_one(key)
-        return (curr != None and curr['reply_completed'] == True)
+        return (curr is not None and curr['reply_completed'] is True)
 
     def _log_to_db(self, comment, snapshot_urls=None, imgur_album=None,
-            imgur_urls=None, reply_text=None, reply_completed=None):
+                   imgur_urls=None, reply_text=None, reply_completed=None):
         key = self._get_db_key(comment)
-        imgur_album_id = imgur_album.id if imgur_album != None else None
+        imgur_album_id = imgur_album.id if imgur_album is not None else None
         self.db.snapshot_log.update(
             key,
             {
@@ -163,19 +166,21 @@ class SnapshotCommand(Command):
         self.logger.debug('Wrote log: %s', key)
 
     def _create_imgur_album(self, comment):
-        ALBUM_DESCRIPTION_TEMPLATE = ('Snapshot for {author} at {permalink}.\n'
+        ALBUM_DESCRIPTION_TEMPLATE = (
+            'Snapshot for {author} at {permalink}.\n'
             'Snapshot by: /u/snapshot_bot')
         album_title = "{0}'s snapshot".format(comment.author.name)
         album_description = ALBUM_DESCRIPTION_TEMPLATE.format(
-                author=comment.author.name, permalink=comment.permalink)
+            author=comment.author.name, permalink=comment.permalink)
 
         album = self.imgur.create_album(title=album_title,
-                                description=album_description)
+                                        description=album_description)
         self.logger.debug('created album %s', album)
         return album
 
     def _screenshot_urls(self, urls, comment, album):
-        IMAGE_DESCRIPTION_TEMPLATE = ('Snapshot for {author} at {permalink}.\n'
+        IMAGE_DESCRIPTION_TEMPLATE = (
+            'Snapshot for {author} at {permalink}.\n'
             'URL: {url}\n\n'
             'Snapshot by: /u/snapshot_bot')
 

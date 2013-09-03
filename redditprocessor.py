@@ -55,10 +55,9 @@ class RedditCommentProcessor(object):
 
         if reddit_creds is not None:
             self.logger.info('Logging into praw with user [/u/%s]',
-                reddit_creds['username'])
+                             reddit_creds['username'])
             self.reddit.login(username=reddit_creds['username'],
                               password=reddit_creds['password'])
-
 
     def register_command(self, command):
         """Register command to execute per comment"""
@@ -70,7 +69,8 @@ class RedditCommentProcessor(object):
 
         for subreddit in self.subreddit_filter:
             self.logger.info('Processing subreddit: %s', subreddit)
-            comments = self.reddit.get_comments(subreddit,
+            comments = self.reddit.get_comments(
+                subreddit,
                 limit=self.comment_limit)
 
             self._process_comments(comments)
