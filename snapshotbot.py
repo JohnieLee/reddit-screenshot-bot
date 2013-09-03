@@ -25,7 +25,7 @@ class SnapshotCommand(Command):
          * uploads the snapshot to imgur
     """
 
-    # URL for Snapito API
+    # URL for Snap API
     SNAPITO_URL_TEMPLATE \
         = 'http://api.snapito.com/web/{API_KEY}/full/{URL}?type=png'
 
@@ -39,12 +39,14 @@ class SnapshotCommand(Command):
     # String used to trigger the processing of this command.
     TRIGGER_WORD = '/u/snapshot_bot'
 
-    def __init__(self, snapito_key, imgur_key, mongo_url):
+    def __init__(self, snapito_key, imgur_key, mongo_url,
+                 snap_url_template=SNAPITO_URL_TEMPLATE):
         super(SnapshotCommand, self).__init__('SnapshotBot')
         self.logger = logging.getLogger('SnapshotBot')
         self.imgur = pyimgur.Imgur(imgur_key)
         self.snapito_key = snapito_key
         self.db = self._open_db(mongo_url)
+        self.snap_url_template = snap_url_template
 
     def process(self, comment):
         '''Process the latest comments for a given subreddit'''
@@ -187,7 +189,7 @@ class SnapshotCommand(Command):
         self.logger.info('capturing url: %s', urls)
         imgur_urls = []
         for url in urls:
-            snapito_url = self.SNAPITO_URL_TEMPLATE.format(
+            snapito_url = self.snap_url_template.format(
                 API_KEY=self.snapito_key, URL=url)
             self.logger.info('snapito: %s', snapito_url)
 
