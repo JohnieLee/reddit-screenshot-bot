@@ -7,6 +7,7 @@ Framework to create Reddit Bots that processes comments.
 
 import logging
 import os
+import time
 
 from redditprocessor import RedditCommentProcessor, Command
 from snapshotbot import SnapshotCommand
@@ -44,6 +45,11 @@ def main():
         'password': os.environ.get('REDDIT_BOT_PASSWORD')
     }
 
+    # How long to run
+    LOOP_TIMEOUT_SECS = float(os.environ.get('LOOP_TIMEOUT', 480))
+    # How long to sleep between runs
+    LOOP_SLEEP_SECS = float(os.environ.get('LOOP_SLEEP', 15))
+
     processor = RedditCommentProcessor(
         reddit_creds=reddit_creds, subreddit_filter=SUBREDDIT_LIST.split(','),
         comment_limit=COMMENT_LIMIT)
@@ -56,7 +62,14 @@ def main():
 
     #processor.register_command(name_match_command)
     processor.register_command(snapshot_command)
-    processor.run()
+
+
+    timeout = time.time() + LOOP_TIMEOUT_SECS
+    while True:
+        processor.run()
+        if time.time() > timeout:
+            break
+        time.sleep(LOOP_SLEEP_SECS)
 
 
 if __name__ == "__main__":
