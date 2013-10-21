@@ -48,7 +48,7 @@ def main():
     # How long to run
     LOOP_TIMEOUT_SECS = float(os.environ.get('LOOP_TIMEOUT', 480))
     # How long to sleep between runs
-    LOOP_SLEEP_SECS = float(os.environ.get('LOOP_SLEEP', 15))
+    LOOP_SLEEP_SECS = float(os.environ.get('LOOP_SLEEP', 30))
 
     processor = RedditCommentProcessor(
         reddit_creds=reddit_creds, subreddit_filter=SUBREDDIT_LIST.split(','),
@@ -70,6 +70,8 @@ def main():
         if time.time() > timeout:
             break
         time.sleep(LOOP_SLEEP_SECS)
+
+    logging.getLogger('main').info('Done looping')
 
 
 if __name__ == "__main__":
